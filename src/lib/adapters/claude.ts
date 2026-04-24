@@ -4,17 +4,9 @@ import { join } from 'path'
 import { confirm } from '@inquirer/prompts'
 import pc from 'picocolors'
 import matter from 'gray-matter'
-import { homedir } from 'os'
 import type { Adapter, InstallOptions } from './types.js'
 import type { Profile } from '../validator.js'
-
-const CLAUDE_DIR = join(homedir(), '.claude')
-const AGENTS_DIR = join(CLAUDE_DIR, 'agents')
-const SKILLS_DIR = join(CLAUDE_DIR, 'skills')
-
-const agentPath = (name: string) => join(AGENTS_DIR, `${name}.md`)
-export const skillDir = (name: string) => join(SKILLS_DIR, name)
-export const skillPath = (name: string) => join(skillDir(name), 'SKILL.md')
+import { CLAUDE_DIR, AGENTS_DIR, agentPath, skillDir, skillPath } from '../paths.js'
 
 export function installSkill(name: string, content: string): void {
   mkdirSync(skillDir(name), { recursive: true })

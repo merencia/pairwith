@@ -51,10 +51,8 @@ async function installSingle(arg: string, opts: InstallCommandOptions): Promise<
   let raw: string
   if (source.type === 'official') {
     raw = await fetchOfficialProfile(source.handle)
-  } else if (source.type === 'external') {
-    raw = await fetchExternalProfile(source.user, source.repo, source.handle)
   } else {
-    raw = await fetchExternalProfile(...parseUrlSource(source.url))
+    raw = await fetchExternalProfile(source.user, source.repo, source.handle)
   }
 
   const profile = parse(raw, arg)
@@ -153,10 +151,3 @@ async function scaffoldProfile(handle: string): Promise<void> {
   console.log(`  Fill in the sections and open a PR at github.com/merencia/pairwith`)
 }
 
-function parseUrlSource(url: string): [string, string, string | undefined] {
-  const u = new URL(url)
-  const parts = u.pathname.split('/').filter(Boolean)
-  const [user, repo, , , ...rest] = parts
-  const handle = rest.length ? rest[rest.length - 1].replace(/\.md$/, '') : undefined
-  return [user, repo, handle]
-}

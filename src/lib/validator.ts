@@ -35,7 +35,7 @@ export function parse(raw: string, source: string): Profile {
   }
 
   const missingSections = REQUIRED_SECTIONS.filter(
-    section => !content.toLowerCase().includes(`# ${section.toLowerCase()}`)
+    section => !new RegExp(`^# ${section}`, 'im').test(content)
   )
 
   if (missingSections.length > 0) {

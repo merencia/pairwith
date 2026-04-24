@@ -1,6 +1,5 @@
 import { Command } from 'commander'
 import pc from 'picocolors'
-import matter from 'gray-matter'
 import { UserError } from './lib/errors.js'
 import { install } from './commands/install.js'
 import { list } from './commands/list.js'
@@ -80,10 +79,8 @@ program
       let raw: string
       if (resolved.type === 'official') {
         raw = await fetchOfficialProfile(resolved.handle)
-      } else if (resolved.type === 'external') {
-        raw = await fetchExternalProfile(resolved.user, resolved.repo, resolved.handle)
       } else {
-        raw = await fetchExternalProfile(...parseUrlSource(resolved.url))
+        raw = await fetchExternalProfile(resolved.user, resolved.repo, resolved.handle)
       }
       const profile = parse(raw, source)
       process.stdout.write(profile.content.trim() + '\n')
@@ -110,10 +107,3 @@ async function run(fn: () => Promise<void>): Promise<void> {
   }
 }
 
-function parseUrlSource(url: string): [string, string, string | undefined] {
-  const u = new URL(url)
-  const parts = u.pathname.split('/').filter(Boolean)
-  const [user, repo, , , ...rest] = parts
-  const handle = rest.length ? rest[rest.length - 1].replace(/\.md$/, '') : undefined
-  return [user, repo, handle]
-}
