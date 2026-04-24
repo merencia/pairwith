@@ -106,10 +106,9 @@ Output the generated profile in a code block, then ask:
 
 _"Does this look right? A few things worth checking: (1) the dialogue examples capture your actual voice, (2) the anti-patterns are specific to you, not generic. Want to adjust anything before saving?"_
 
-If the user confirms, save to both locations:
+If the user confirms, save to `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
 
-1. `profiles/<handle>.md` in the current repo — for submission to the official registry.
-2. `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
+Additionally, if the current working directory is the pairwith registry repo (i.e. a `profiles/` directory exists at the root and the repo is `merencia/pairwith`), also save to `profiles/<handle>.md` for registry submission.
 
 Before saving, add these fields to the frontmatter (after `model:`):
 
