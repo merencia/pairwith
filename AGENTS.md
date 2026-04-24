@@ -31,7 +31,7 @@ When working from an issue: write the tests first, open a draft PR with just the
 ## Safety
 
 - A profile is a prompt. The CLI **never executes** profile content — it only writes files.
-- Never write outside `~/.claude/agents/` unless the user passes `--path` explicitly.
+- By default, only write under `~/.claude/agents/`, `~/.claude/skills/`, `~/.copilot/agents/`, `~/.copilot/skills/`, or `~/.cursor/rules/`, unless the user passes `--path` explicitly.
 - Never overwrite an existing file without confirmation, unless `--force`.
 - Every network call has a timeout and a size limit. Sanitize any handle/URL before using it.
 - Never log tokens, credentials, or third-party transcript content.

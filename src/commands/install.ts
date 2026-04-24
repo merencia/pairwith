@@ -11,10 +11,22 @@ import {
 } from '../lib/github.js'
 import { parse } from '../lib/validator.js'
 import { getAdapter, detectAdapters, allAdapters, claudeAdapter } from '../lib/adapters/index.js'
-import { installSkill, isSkillInstalled } from '../lib/adapters/claude.js'
+import * as claude from '../lib/adapters/claude.js'
+import * as copilot from '../lib/adapters/copilot.js'
 import type { Adapter } from '../lib/adapters/types.js'
 
 const SKILLS = ['pair-with', 'create-profile']
+
+interface SkillInstaller {
+  label: string
+  installSkill(name: string, content: string): void
+  isSkillInstalled(name: string): boolean
+}
+
+const SKILL_INSTALLERS: Partial<Record<Adapter['id'], SkillInstaller>> = {
+  claude: { label: 'Claude Code', ...claude },
+  copilot: { label: 'Copilot CLI', ...copilot },
+}
 
 export interface InstallCommandOptions {
   force?: boolean
@@ -67,27 +79,43 @@ async function installSingle(arg: string, opts: InstallCommandOptions): Promise<
   if (adapters.some(a => a.id === 'claude')) {
     console.log(`  In Claude Code: /pair-with ${profile.name} <your task>`)
   }
+  if (adapters.some(a => a.id === 'copilot')) {
+    console.log(`  In Copilot CLI: copilot --agent=${profile.name} "<your task>"`)
+  }
 }
 
 async function bootstrap(opts: InstallCommandOptions): Promise<void> {
   console.log(pc.bold('pairwith — setup\n'))
 
-  // install Claude skills
-  console.log('Installing Claude Code skills...')
-  for (const skill of SKILLS) {
-    if (isSkillInstalled(skill)) {
-      console.log(`  ${pc.dim('already installed')} ${skill}`)
-      continue
-    }
-    const content = await fetchSkill(skill)
-    installSkill(skill, content)
-    console.log(`  ${pc.green('✓')} ${skill}`)
-  }
-
   // fetch available profiles
   process.stderr.write('\nFetching available profiles...\n')
   const available = await fetchOfficialProfileList()
   const adapters = await resolveAdapters(opts.for)
+
+  // install skills into each adapter that supports them
+  const skillTargets = adapters
+    .map(a => SKILL_INSTALLERS[a.id])
+    .filter((x): x is SkillInstaller => Boolean(x))
+
+  if (skillTargets.length > 0) {
+    const skillContents = new Map<string, string>()
+    for (const target of skillTargets) {
+      console.log(`\nInstalling ${target.label} skills...`)
+      for (const skill of SKILLS) {
+        if (target.isSkillInstalled(skill)) {
+          console.log(`  ${pc.dim('already installed')} ${skill}`)
+          continue
+        }
+        let content = skillContents.get(skill)
+        if (!content) {
+          content = await fetchSkill(skill)
+          skillContents.set(skill, content)
+        }
+        target.installSkill(skill, content)
+        console.log(`  ${pc.green('✓')} ${skill}`)
+      }
+    }
+  }
 
   const adapterLabels = adapters.map(a => a.label).join(', ')
   console.log(`Installing for: ${pc.cyan(adapterLabels)}\n`)
@@ -127,8 +155,14 @@ async function bootstrap(opts: InstallCommandOptions): Promise<void> {
   }
 
   console.log(`\n${pc.bold('Done!')}`)
-  console.log(`  /pair-with <handle> <task>  — pair in Claude Code`)
-  console.log(`  /create-profile             — generate a profile with AI`)
+  if (adapters.some(a => a.id === 'claude')) {
+    console.log(`  /pair-with <handle> <task>  — pair in Claude Code`)
+    console.log(`  /create-profile             — generate a profile with AI`)
+  }
+  if (adapters.some(a => a.id === 'copilot')) {
+    console.log(`  copilot --agent=<handle> "<task>"  — pair in Copilot CLI`)
+    console.log(`  /create-profile                    — generate a profile with AI`)
+  }
   console.log(`  pairwith list        — browse the official registry`)
 }
 

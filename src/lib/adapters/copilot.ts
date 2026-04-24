@@ -1,85 +1,111 @@
-import { existsSync, mkdirSync, writeFileSync, renameSync, unlinkSync, readFileSync } from 'fs'
+import { existsSync, mkdirSync, writeFileSync, renameSync, unlinkSync, readdirSync, readFileSync } from 'fs'
+import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { homedir } from 'os'
 import { confirm } from '@inquirer/prompts'
 import pc from 'picocolors'
+import matter from 'gray-matter'
 import type { Adapter, InstallOptions } from './types.js'
 import type { Profile } from '../validator.js'
 
-const MARKER_PREFIX = '<!-- pairwith:'
-const MARKER_SUFFIX = '-->'
+const COPILOT_DIR = join(homedir(), '.copilot')
+const AGENTS_DIR = join(COPILOT_DIR, 'agents')
+const SKILLS_DIR = join(COPILOT_DIR, 'skills')
 
-function instructionsPath(cwd: string) {
-  return join(cwd, '.github', 'copilot-instructions.md')
+const agentPath = (name: string) => join(AGENTS_DIR, `${name}.agent.md`)
+const skillDir = (name: string) => join(SKILLS_DIR, name)
+const skillPath = (name: string) => join(skillDir(name), 'SKILL.md')
+
+// Skills shipped by pairwith reference Claude paths; rewrite for Copilot CLI.
+function rewriteSkillContent(content: string): string {
+  return content.replaceAll('~/.claude/agents/<handle>.md', '~/.copilot/agents/<handle>.agent.md')
 }
 
-function buildContent(profile: Profile): string {
-  return [
-    `${MARKER_PREFIX} ${profile.name} ${MARKER_SUFFIX}`,
-    `# Pair programming with ${profile.name}`,
-    '',
-    `> ${profile.description}`,
-    '',
-    profile.content.trim(),
-  ].join('\n')
+export function installSkill(name: string, content: string): void {
+  mkdirSync(skillDir(name), { recursive: true })
+  const dest = skillPath(name)
+  const tmp = `${dest}.tmp`
+  writeFileSync(tmp, rewriteSkillContent(content), 'utf8')
+  renameSync(tmp, dest)
 }
 
-function readInstalledName(cwd: string): string | null {
-  const path = instructionsPath(cwd)
+export function isSkillInstalled(name: string): boolean {
+  return existsSync(skillPath(name))
+}
+
+const legacyInstructionsPath = (cwd: string) =>
+  join(cwd, '.github', 'copilot-instructions.md')
+const LEGACY_MARKER_RE = /<!-- pairwith: ([\w-]+) -->/
+
+function readLegacyName(cwd: string): string | null {
+  const path = legacyInstructionsPath(cwd)
   if (!existsSync(path)) return null
-  const content = readFileSync(path, 'utf8')
-  const match = content.match(new RegExp(`${MARKER_PREFIX} ([\\w-]+) ${MARKER_SUFFIX}`))
+  const match = readFileSync(path, 'utf8').match(LEGACY_MARKER_RE)
   return match ? match[1] : null
 }
 
 export const copilotAdapter: Adapter = {
   id: 'copilot',
-  label: 'GitHub Copilot',
+  label: 'GitHub Copilot CLI',
 
   detect() {
-    // Copilot is opt-in — always available but not auto-detected
-    return false
+    return existsSync(COPILOT_DIR)
   },
 
   async install(profile: Profile, opts: InstallOptions = {}) {
-    const cwd = opts.cwd ?? process.cwd()
-    const dest = instructionsPath(cwd)
+    const dest = agentPath(profile.name)
 
     if (existsSync(dest) && !opts.force) {
-      const existing = readInstalledName(cwd)
-      const msg = existing
-        ? `[Copilot] ${dest} already has profile "${existing}". Overwrite with "${profile.name}"?`
-        : `[Copilot] ${dest} already exists. Overwrite?`
-      const overwrite = await confirm({ message: msg, default: false })
+      const overwrite = await confirm({
+        message: `[Copilot CLI] Profile "${profile.name}" already exists. Overwrite?`,
+        default: false,
+      })
       if (!overwrite) return
     }
 
-    mkdirSync(join(cwd, '.github'), { recursive: true })
+    mkdirSync(AGENTS_DIR, { recursive: true })
     const tmp = `${dest}.tmp`
-    writeFileSync(tmp, buildContent(profile), 'utf8')
+    writeFileSync(tmp, profile.raw, 'utf8')
     renameSync(tmp, dest)
-    console.log(`  ${pc.green('✓')} GitHub Copilot → ${pc.dim(dest)}`)
+    console.log(`  ${pc.green('✓')} GitHub Copilot CLI → ${pc.dim(dest)}`)
   },
 
   isInstalled(name: string) {
-    return readInstalledName(process.cwd()) === name
+    return existsSync(agentPath(name))
   },
 
   async remove(name: string, opts: { force?: boolean } = {}) {
     const cwd = process.cwd()
-    const path = instructionsPath(cwd)
-    if (!existsSync(path)) return
+    const targets = [agentPath(name)].filter(p => existsSync(p))
+    if (readLegacyName(cwd) === name) targets.push(legacyInstructionsPath(cwd))
+
+    if (targets.length === 0) return
 
     if (!opts.force) {
-      const ok = await confirm({ message: `[Copilot] Remove "${name}" from ${path}?`, default: false })
+      const list = targets.map(p => `\n    - ${p}`).join('')
+      const ok = await confirm({
+        message: `[Copilot CLI] Remove "${name}" from:${list}`,
+        default: false,
+      })
       if (!ok) return
     }
 
-    unlinkSync(path)
+    for (const path of targets) unlinkSync(path)
   },
 
   async list() {
-    const name = readInstalledName(process.cwd())
-    if (!name) return []
-    return [{ name, description: 'Installed via .github/copilot-instructions.md' }]
+    if (!existsSync(AGENTS_DIR)) return []
+    const files = readdirSync(AGENTS_DIR).filter(f => f.endsWith('.agent.md'))
+    const results: Array<{ name: string; description: string }> = []
+    for (const file of files) {
+      try {
+        const raw = await readFile(join(AGENTS_DIR, file), 'utf8')
+        const { data } = matter(raw)
+        if (data.name && data.description) {
+          results.push({ name: data.name as string, description: data.description as string })
+        }
+      } catch { /* skip */ }
+    }
+    return results.sort((a, b) => a.name.localeCompare(b.name))
   },
 }

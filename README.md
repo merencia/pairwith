@@ -88,7 +88,7 @@ npx pairwith install merencia
 
 # Install for a specific tool
 npx pairwith install merencia --for claude
-npx pairwith install merencia --for copilot   # writes .github/copilot-instructions.md
+npx pairwith install merencia --for copilot   # writes ~/.copilot/agents/merencia.agent.md
 npx pairwith install merencia --for cursor    # writes ~/.cursor/rules/merencia.mdc
 npx pairwith install merencia --for all
 
@@ -120,10 +120,12 @@ npx pairwith print merencia
 |---|---|---|
 | `claude` | `~/.claude/agents/<name>.md` | Yes, if `~/.claude/` exists |
 | `cursor` | `~/.cursor/rules/<name>.mdc` | Yes, if `~/.cursor/` exists |
-| `copilot` | `.github/copilot-instructions.md` in CWD | No — opt-in only |
+| `copilot` | `~/.copilot/agents/<name>.agent.md` | Yes, if `~/.copilot/` exists |
 | `all` | All of the above | — |
 
 If no `--for` is passed, the CLI installs for all auto-detected tools. If nothing is detected, defaults to Claude Code.
+
+Invoke an installed Copilot agent with `copilot --agent=<name> "<task>"` (or `/agent` interactively).
 
 ### Layout detection (external repos)
 
