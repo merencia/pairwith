@@ -30,6 +30,12 @@
 
 <!-- Link to a public acknowledgement, DM screenshot with permission to share, etc. -->
 
+**Notification (community homage only):**
+
+<!-- If this is a community homage, tag the referenced person below so they are notified and can review or request changes. -->
+
+@
+
 ---
 
 ## CLI / docs PR checklist
