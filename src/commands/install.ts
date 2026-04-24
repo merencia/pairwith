@@ -23,7 +23,7 @@ interface SkillInstaller {
   isSkillInstalled(name: string): boolean
 }
 
-const SKILL_INSTALLERS: Record<string, SkillInstaller> = {
+const SKILL_INSTALLERS: Partial<Record<Adapter['id'], SkillInstaller>> = {
   claude: { label: 'Claude Code', ...claude },
   copilot: { label: 'Copilot CLI', ...copilot },
 }
