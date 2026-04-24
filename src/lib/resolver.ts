@@ -3,7 +3,6 @@ import { UserError } from './errors.js'
 export type Source =
   | { type: 'official'; handle: string }
   | { type: 'external'; user: string; repo: string; handle?: string }
-  | { type: 'url'; url: string }
 
 export function resolve(arg: string): Source {
   if (arg.startsWith('https://') || arg.startsWith('http://')) {
