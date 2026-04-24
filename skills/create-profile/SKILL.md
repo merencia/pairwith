@@ -1,11 +1,23 @@
 ---
 name: create-profile
-description: Generate a developer profile for pairwith from a GitHub handle, links, and optional reference text or file. Follows TEMPLATE.md. Use when someone wants to create their own profile or generate one for a developer they know well.
+description: Generate a community AI style profile for pairwith — a respectful homage inspired by publicly observable aspects of a developer's technical work. Follows TEMPLATE.md, PROFILE_POLICY.md, and DISCLAIMER.md.
 ---
 
 # create-profile
 
-Generate a `profiles/<handle>.md` file ready to submit to pairwith.
+Generate a `profiles/<handle>.md` style profile ready to submit to `pairwith`, following the project's policy.
+
+## What this skill generates (and what it does not)
+
+This skill creates a **community AI style profile** — a set of prompt instructions inspired by publicly observable aspects of a developer's technical work. A profile is **not** the real person, does not represent them, and is not endorsed by or affiliated with them unless explicitly stated and documented.
+
+Before generating anything, read or re-read:
+
+- [`TEMPLATE.md`](../../TEMPLATE.md) — the required structure and mandatory non-impersonation header.
+- [`PROFILE_POLICY.md`](../../PROFILE_POLICY.md) — eligibility, consent tiers, naming, content, and safety rules.
+- [`DISCLAIMER.md`](../../DISCLAIMER.md) — the overall project posture.
+
+If you cannot read these files (e.g. running outside the repo), apply the principles summarized below from memory.
 
 ## Invocation
 
@@ -27,53 +39,63 @@ Examples:
 Parse the invocation arguments:
 
 - **GitHub handle**: the first word if it doesn't start with `http`, `/`, or `.`. If not provided, ask: _"What's the GitHub handle for this profile?"_
-- **URLs**: any argument starting with `http` or a bare domain (e.g. `carlosbecker.com`). These are links to fetch — personal site, blog, LinkedIn, or any reference page.
-- **File path**: any argument starting with `/`, `./`, or ending in `.md` or `.txt`. Read the file contents.
+- **URLs**: any argument starting with `http` or a bare domain. Only accept URLs that are clearly public (personal sites, blogs, LinkedIn public pages, public talks, public articles, public repositories).
+- **File path**: any argument starting with `/`, `./`, or ending in `.md` or `.txt`. Read the file contents. Only use content that is plainly public or provided by the user about themselves.
 
 If no URLs and no file are provided after getting the handle, ask:
-_"Any useful links or a reference file? (personal site, LinkedIn, blog, existing SKILL.md, etc.) — or just press enter to generate from GitHub alone."_
+_"Any useful public links or a reference file? (personal site, public LinkedIn, blog, public talks, existing public style guide, etc.) — or just press enter to generate from public GitHub alone."_
+
+**Refuse to use** any source that appears to be private, leaked, non-public, or that the user does not have the right to share. If in doubt, ask.
 
 ## Step 2 — collect source material
 
-Fetch and read all available sources in parallel:
+Fetch and read all available public sources in parallel:
 
-1. **GitHub profile** — `https://github.com/<handle>`: bio, pinned repos, languages, follower count, notable projects.
-2. **GitHub repos** — skim the top pinned/starred repos for README content, tech stack, coding style signals, and how they describe their own projects.
-3. **Each provided URL** — fetch full content. If it's a LinkedIn page, extract: current role, past roles, skills, publications, recommendations quotes.
-4. **Provided file** — read in full. If it's a SKILL.md or similar style guide, treat it as the most authoritative source for tone, heuristics, and anti-patterns.
+1. **GitHub profile** — `https://github.com/<handle>`: public bio, pinned repos, languages, notable projects.
+2. **GitHub repos** — skim the top pinned/starred repos for public README content, tech stack signals, and how the developer describes their own public work.
+3. **Each provided URL** — fetch full content. Only extract publicly visible information. Do not fabricate or infer private details from public context.
+4. **Provided file** — read in full. If it's an existing public style guide or pair-with file the developer authored, treat it as the most authoritative source for tone and heuristics.
 
 If a fetch fails, note it and continue with what's available.
 
 ## Step 3 — analyze and synthesize
 
-Before writing, identify the following from the collected sources. Be specific — vague profiles are useless.
+Identify the following from public sources. Be specific, but only with material that is publicly observable. Do not speculate about private beliefs, opinions on unrelated topics, personal attributes, or anything sensitive (health, family, politics, religion, ethnicity, sexuality, finances, location, etc.).
 
-**Principles**: What does this person treat as non-negotiable? Look for repeated emphasis, strong statements, things they push back on consistently.
+**Principles**: technical values the developer emphasizes in public work. Look for repeated emphasis in their writing, commit messages, code review comments, or talks.
 
-**Decision heuristics**: How do they choose between options? Look for tie-breakers, defaults, rules of thumb they explicitly name.
+**Decision heuristics**: how they choose between technical options — tie-breakers and defaults they explicitly name in public.
 
-**Tone**: How do they write? Short or verbose? Do they use humor? Are they direct or diplomatic? Pull actual phrasing from their writing when possible.
+**Tone and communication** (in public technical contexts): short or verbose, use of humor, direct or diplomatic. Draw from public writing style.
 
-**Typical reasoning**: What order do they approach problems? Look for any stated workflow — "first I do X, then Y".
+**Typical reasoning**: any stated workflow in their public material — "first I do X, then Y".
 
-**Anti-patterns**: What annoys them? What do they explicitly avoid or call out in code, reviews, process?
+**Anti-patterns**: what they publicly push back on in code, reviews, or process.
 
-**Stack**: What do they actually use day-to-day? Not just what they know — what they reach for by default.
+**Stack**: what they reach for in public work.
 
-**Dialogue examples**: Reconstruct realistic exchanges from what you know about their style. Base these on:
-- how they respond to feature requests
-- how they give code review feedback
-- how they handle disagreement or pushback
-- their characteristic phrasing and rhythm
-
-If the source material includes a SKILL.md, pair-with file, or extensive writing, the dialogue examples should closely mirror the actual voice — not a generic approximation.
+**Dialogue examples**: realistic illustrative exchanges that reflect the profile's public technical voice. These are **not** verbatim quotes. Mark them as illustrative. Do not attribute specific opinions to the real person that you cannot back with public sources.
 
 ## Step 4 — write the profile
 
-Follow `TEMPLATE.md` exactly. All sections in order:
+Follow [`TEMPLATE.md`](../../TEMPLATE.md) exactly.
+
+**Required top matter** — include in this order:
+
+1. Frontmatter (`name`, `description`, `model`, and for third-party homage profiles also `generated` and `generated_from`).
+2. The mandatory non-impersonation header, verbatim from the template. Do not skip, paraphrase, or weaken it.
+
+**Frontmatter rules:**
+
+- `name`: the developer's public GitHub handle, lowercase. This is nominative — it identifies the inspiration source.
+- `description`: frame as a style profile inspired by public work. Good: _"A style profile inspired by X's public technical writing — empirical, test-first, direct."_ Avoid: _"You are X."_ / _"The X agent."_ / _"Be X."_
+- `model`: `sonnet` by default.
+- `generated`: today's date in `YYYY-MM-DD` (only for profiles built from third-party public sources).
+- `generated_from`: list of public source URLs actually used (only for profiles built from third-party sources). Omit both fields when the profile is authored by the subject themselves.
+
+**Required sections, in this order:**
 
 ```
-frontmatter (name, description, model)
 # Principles
 # Decision heuristics
 # Tone and communication
@@ -84,45 +106,49 @@ frontmatter (name, description, model)
 # Author context
 ```
 
-**Frontmatter rules:**
-- `name`: the GitHub handle, lowercase
-- `description`: one sentence — style summary + what this profile is good for. Example: _"Pair session in X's style — [2-3 adjectives]. Good for [specific use cases]."_
-- `model`: `sonnet`
+**Framing rules (apply to every section):**
+
+- **Do not write in the first person as the developer.** Avoid _"I believe…"_, _"My opinion is…"_, _"I would definitely…"_.
+- Prefer third-person style-profile framing: _"This profile emphasizes…"_, _"Under this profile, the assistant should…"_, _"Responses under this profile tend to…"_.
+- Dialogue examples are labeled as illustrative, not verbatim quotes. Never present them as what the real person said.
+- Do **not** fabricate biographical details, private opinions, employer information beyond what is public, quotes, or personal anecdotes.
+- Do **not** include offensive, defamatory, mocking, or invasive content.
+- Do **not** include instructions that bypass laws, licenses, safety rules, privacy protections, or platform rules.
+- Do **not** include content that could be used to impersonate the person in a deceptive way.
 
 **Quality bar for dialogue examples:**
-- Each example has a realistic user prompt and a response in their voice.
-- The response should sound like *them*, not like a generic AI. Use their vocabulary, sentence length, and attitude.
-- Cover different scenarios: feature request, code review, design question, debugging, disagreement.
-- If the source has direct quotes or strong opinions, reflect those.
+
+- Each example has a realistic user prompt and a response written in the profile's public voice.
+- Responses sound grounded in public engineering communication, not generic AI output.
+- Cover multiple scenarios (feature request, code review, design question, debugging, disagreement).
+- If the sources have clear, public, recurring opinions, reflect them — attributed to the profile, not to the real person.
 
 **What to avoid:**
-- Generic statements that could apply to any senior engineer ("I care about code quality", "I value good tests").
-- Padding. If there's nothing specific to say about a section, keep it short and concrete rather than filling it with platitudes.
-- Inventing opinions not supported by the sources. If something isn't there, don't make it up — leave the section sparse or skip optional parts.
+
+- Generic statements that could apply to any senior engineer.
+- Padding. If a section can't be filled from public sources, keep it short rather than inventing.
+- Inventing opinions. If it isn't in the sources, don't make it up.
+- Private or sensitive personal information.
 
 ## Step 5 — present and confirm
 
 Output the generated profile in a code block, then ask:
 
-_"Does this look right? A few things worth checking: (1) the dialogue examples capture your actual voice, (2) the anti-patterns are specific to you, not generic. Want to adjust anything before saving?"_
+_"Does this look right? Worth checking: (1) dialogue examples reflect public style without being presented as direct quotes, (2) anti-patterns are grounded in public material, (3) nothing private or sensitive snuck in, (4) the non-impersonation header is present. Want to adjust anything before saving?"_
 
-If the user confirms, save to `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
+**On confirm, save:**
 
-Additionally, if the current working directory is the pairwith registry repo (i.e. a `profiles/` directory exists at the root and the repo is `merencia/pairwith`), also save to `profiles/<handle>.md` for registry submission.
+1. `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
+2. `profiles/<handle>.md` in the current repo — **only** if the current working directory is the `pairwith` registry repo (i.e. a `profiles/` directory exists at root and the repo is `merencia/pairwith`). Do not create a `profiles/` directory in an unrelated project.
 
-Before saving, add these fields to the frontmatter (after `model:`):
-
-```yaml
-generated: <today's date in YYYY-MM-DD>
-generated_from:
-  - <each URL fetched as a source>
-```
-
-Only include URLs that were actually fetched and contributed to the profile. Omit `generated` and `generated_from` if the profile was written by the subject themselves.
+Before saving, ensure the frontmatter has `generated` (today's date, YYYY-MM-DD) and `generated_from` (the URLs actually fetched) if the profile was built from third-party sources. Omit both fields when the profile is written by the subject.
 
 If the user wants changes, apply them and present the updated version.
 
-## Notes
+## Notes to the user
 
-- If the handle belongs to someone other than the user, note at the end: _"If this profile is for someone else, make sure you have their consent before submitting to the official registry."_
-- If the source material is sparse (GitHub profile only, few repos, no links), say so: _"I had limited material to work with — the dialogue examples especially are inferred rather than observed. Review them carefully before publishing."_
+Include these reminders in your presentation, where applicable:
+
+- If the profile is about someone other than the user: _"This is a community homage. Before submitting it to the official registry, follow [`PROFILE_POLICY.md`](../../PROFILE_POLICY.md) — especially the consent tier in the PR description. If the referenced person requests removal, the profile will be removed."_
+- If the source material is sparse (public GitHub only, few repos, no links): _"I had limited public material. The dialogue examples are inferred from style signals rather than observed directly. Review them carefully and do not submit as a community homage unless you're confident they reflect public technical voice, not invention."_
+- Always: _"A profile is a style approximation, not the real person. It does not speak for them and does not imply endorsement."_

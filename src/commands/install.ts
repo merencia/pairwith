@@ -58,6 +58,8 @@ async function resolveAdapters(forOpt: string | undefined): Promise<Adapter[]> {
 async function installSingle(arg: string, opts: InstallCommandOptions): Promise<void> {
   const source = resolve(arg)
 
+  printSafetyNotice(source.type === 'external')
+
   process.stderr.write('Fetching profile...\n')
 
   let raw: string
@@ -132,6 +134,7 @@ async function bootstrap(opts: InstallCommandOptions): Promise<void> {
   }
 
   if (toInstall.length > 0) {
+    printSafetyNotice(false)
     console.log('\nInstalling profiles...')
     for (const handle of toInstall) {
       const raw = await fetchOfficialProfile(handle)
@@ -164,6 +167,17 @@ async function bootstrap(opts: InstallCommandOptions): Promise<void> {
     console.log(`  /create-profile                    — generate a profile with AI`)
   }
   console.log(`  pairwith list        — browse the official registry`)
+}
+
+function printSafetyNotice(external: boolean): void {
+  const notice = [
+    pc.dim('Note: pairwith profiles are prompt instructions that influence AI assistant behavior.'),
+    pc.dim('They are inspired style profiles, not the real people they reference, and are not endorsements.'),
+  ]
+  if (external) {
+    notice.push(pc.dim('External source — inspect it first with: ') + pc.cyan(`pairwith print <source>`))
+  }
+  process.stderr.write(notice.join('\n') + '\n\n')
 }
 
 async function scaffoldProfile(handle: string): Promise<void> {

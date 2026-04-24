@@ -4,10 +4,10 @@ Ground rules for any agent (or human) working in this repo. Read this before edi
 
 ## What this repo is
 
-An open-source CLI (`pairwith`) plus a registry of dev "profiles" — markdown files that make Claude behave like a specific developer during pair programming.
+An open-source CLI (`pairwith`) plus a registry of developer **style profiles** — Markdown files that shape how an AI coding assistant communicates, reasons about trade-offs, and frames feedback. A profile is inspired by publicly observable aspects of a specific developer's technical work. It is **not** the real person and does not represent them.
 
 - The CLI is infrastructure: it must be small, predictable, and safe.
-- Profiles are community content: they must pass quality and consent checks.
+- Profiles are community content: they must pass quality, consent, and non-impersonation checks. See [`PROFILE_POLICY.md`](./PROFILE_POLICY.md) and [`DISCLAIMER.md`](./DISCLAIMER.md).
 
 ## Pair programming rules
 
@@ -40,9 +40,11 @@ When working from an issue: write the tests first, open a draft PR with just the
 
 Profiles merged into `profiles/` must have:
 - `name` and `description` in the frontmatter
+- the mandatory non-impersonation header (see [`TEMPLATE.md`](./TEMPLATE.md))
 - sections for Principles, Decision heuristics, Tone, and Dialogue examples (≥ 2)
-- explicit author consent in the PR description
-- no leaked PII in the examples
+- a clear consent tier declared in the PR description (see [`PROFILE_POLICY.md`](./PROFILE_POLICY.md))
+- `generated` and `generated_from` in the frontmatter for any profile built from third-party public sources
+- no private or sensitive personal information in the examples or author context
 
 ## AI presence
 
