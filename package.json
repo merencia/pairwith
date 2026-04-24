@@ -1,6 +1,6 @@
 {
   "name": "pairwith",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Install developer pair programming profiles for Claude Code, Cursor, and GitHub Copilot",
   "type": "module",
   "bin": {
