@@ -257,6 +257,7 @@ The best source of personality is the **Dialogue examples** section. Paste real 
 ## Project principles
 
 - **Public data, honest attribution** — profiles may be generated from public material the author has published (GitHub, blog posts, talks, articles). The profile makes clear who the subject is and that it's an *approximation*, not the real person.
+- **Not a quote, not a spokesperson** — profiles capture reasoning style and heuristics. They do not represent the subject's actual statements or opinions. Do not quote a profile as if it were something the person said.
 - **Right to removal** — if you find a profile of yourself here and don't want it, [open an issue](https://github.com/merencia/pairwith/issues) or a PR removing `profiles/<your-handle>.md` and it will be removed promptly, no questions asked.
 - **No malicious impersonation** — profiles must not impersonate people to deceive or facilitate fraud.
 - **Quality over quantity** — profiles without dialogue examples don't enter the official registry.
