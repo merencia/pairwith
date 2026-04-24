@@ -256,9 +256,9 @@ The best source of personality is the **Dialogue examples** section. Paste real 
 
 ## Project principles
 
-- **Consent first** — you only publish your *own* profile. PRs adding someone else's profile without explicit authorization are rejected.
-- **Transparency** — each profile makes clear who the author is and that it's an *approximation*, not the real person.
-- **No malicious impersonation** — profiles must not impersonate people without authorization or facilitate fraud.
+- **Public data, honest attribution** — profiles may be generated from public material the author has published (GitHub, blog posts, talks, articles). The profile makes clear who the subject is and that it's an *approximation*, not the real person.
+- **Right to removal** — if you find a profile of yourself here and don't want it, [open an issue](https://github.com/merencia/pairwith/issues) or a PR removing `profiles/<your-handle>.md` and it will be removed promptly, no questions asked.
+- **No malicious impersonation** — profiles must not impersonate people to deceive or facilitate fraud.
 - **Quality over quantity** — profiles without dialogue examples don't enter the official registry.
 - **Zero proprietary infrastructure** — the CLI consumes GitHub directly; the "official registry" is just the `profiles/` directory in this repo. No server, no database, no account.
 
