@@ -106,11 +106,10 @@ Output the generated profile in a code block, then ask:
 
 _"Does this look right? A few things worth checking: (1) the dialogue examples capture your actual voice, (2) the anti-patterns are specific to you, not generic. Want to adjust anything before saving?"_
 
-If the user confirms, offer to save:
+If the user confirms, save to both locations:
 
-```bash
-# save to profiles/<handle>.md in the current repo
-```
+1. `profiles/<handle>.md` in the current repo — for submission to the official registry.
+2. `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
 
 If the user wants changes, apply them and present the updated version.
 
