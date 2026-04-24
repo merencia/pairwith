@@ -106,11 +106,19 @@ Output the generated profile in a code block, then ask:
 
 _"Does this look right? A few things worth checking: (1) the dialogue examples capture your actual voice, (2) the anti-patterns are specific to you, not generic. Want to adjust anything before saving?"_
 
-If the user confirms, offer to save:
+If the user confirms, save to `~/.claude/agents/<handle>.md` — so the profile is immediately available via `/pair-with`.
 
-```bash
-# save to profiles/<handle>.md in the current repo
+Additionally, if the current working directory is the pairwith registry repo (i.e. a `profiles/` directory exists at the root and the repo is `merencia/pairwith`), also save to `profiles/<handle>.md` for registry submission.
+
+Before saving, add these fields to the frontmatter (after `model:`):
+
+```yaml
+generated: <today's date in YYYY-MM-DD>
+generated_from:
+  - <each URL fetched as a source>
 ```
+
+Only include URLs that were actually fetched and contributed to the profile. Omit `generated` and `generated_from` if the profile was written by the subject themselves.
 
 If the user wants changes, apply them and present the updated version.
 
