@@ -4,7 +4,7 @@
   "description": "Install developer pair programming profiles for Claude Code, Cursor, and GitHub Copilot",
   "type": "module",
   "bin": {
-    "pairwith": "./dist/cli.js"
+    "pairwith": "dist/cli.js"
   },
   "files": [
     "dist",
@@ -48,7 +48,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/merencia/pairwith"
+    "url": "git+https://github.com/merencia/pairwith.git"
   },
   "homepage": "https://github.com/merencia/pairwith#readme",
   "bugs": {
