@@ -20,5 +20,5 @@ export async function list(opts: { search?: string }): Promise<void> {
     console.log(`  ${handle}`)
   }
   console.log()
-  console.log(`Install one: ${pc.dim('ia-pair-profile install <handle>')}`)
+  console.log(`Install one: ${pc.dim('pairwith install <handle>')}`)
 }

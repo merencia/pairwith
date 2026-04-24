@@ -1,4 +1,4 @@
-# ia-pair-profiles
+# pairwith
 
 An open-source collection of **developer profiles** for AI pair programming. Each profile captures how a person thinks, their tone, and their decision-making heuristics — installing a profile makes your AI coding tool behave like that developer during the session.
 
@@ -11,7 +11,7 @@ Works with **Claude Code**, **GitHub Copilot**, **Cursor**, and any tool that ac
 ## How it works
 
 1. **Share your style** → write `profiles/<your-handle>.md` following `TEMPLATE.md` and open a PR to the official registry. Or host it in your own GitHub repo.
-2. **Pair with someone** → run `npx ia-pair-profiles install <handle>` and you're done — the profile shows up in Claude Code.
+2. **Pair with someone** → run `npx pairwith install <handle>` and you're done — the profile shows up in Claude Code.
 3. During the session, Claude responds with that developer's reasoning, tone, and heuristics.
 
 Profiles are plain Markdown with YAML frontmatter. No custom runtime, no server — just files. The CLI handles translating each profile into the format each tool expects.
@@ -59,7 +59,7 @@ The skill asks for a GitHub handle if not provided, fetches the profile, repos, 
 ### `install` — bootstrap everything at once
 
 ```bash
-npx ia-pair-profiles install
+npx pairwith install
 ```
 
 Run without arguments to leave everything ready to use and ready to contribute:
@@ -71,8 +71,8 @@ Run without arguments to leave everything ready to use and ready to contribute:
 5. Prints a summary and next steps
 
 ```bash
-npx ia-pair-profiles install --all          # install all official profiles without prompting
-npx ia-pair-profiles install --skip-profile # skip profile scaffolding
+npx pairwith install --all          # install all official profiles without prompting
+npx pairwith install --skip-profile # skip profile scaffolding
 ```
 
 ---
@@ -81,35 +81,35 @@ npx ia-pair-profiles install --skip-profile # skip profile scaffolding
 
 ```bash
 # Bootstrap everything (skills + profiles + scaffold your own)
-npx ia-pair-profiles install
+npx pairwith install
 
 # Install for all detected tools (Claude Code, Cursor, etc.)
-npx ia-pair-profiles install merencia
+npx pairwith install merencia
 
 # Install for a specific tool
-npx ia-pair-profiles install merencia --for claude
-npx ia-pair-profiles install merencia --for copilot   # writes .github/copilot-instructions.md
-npx ia-pair-profiles install merencia --for cursor    # writes ~/.cursor/rules/merencia.mdc
-npx ia-pair-profiles install merencia --for all
+npx pairwith install merencia --for claude
+npx pairwith install merencia --for copilot   # writes .github/copilot-instructions.md
+npx pairwith install merencia --for cursor    # writes ~/.cursor/rules/merencia.mdc
+npx pairwith install merencia --for all
 
 # External repo (profile hosted in someone's own repo)
-npx ia-pair-profiles install user/my-profile
+npx pairwith install user/my-profile
 
 # External collection repo (pick a specific handle)
-npx ia-pair-profiles install user/profiles-repo#alice
+npx pairwith install user/profiles-repo#alice
 
 # Full URL also works
-npx ia-pair-profiles install https://github.com/user/repo
+npx pairwith install https://github.com/user/repo
 
 # Print profile body to stdout — pipe into any tool
-npx ia-pair-profiles print merencia
+npx pairwith print merencia
 ```
 
 ### How the CLI resolves the source
 
 | Format | Resolution |
 |---|---|
-| `<handle>` (no `/`) | Official registry → `merencia/ia-pair-profiles/profiles/<handle>.md` |
+| `<handle>` (no `/`) | Official registry → `merencia/pairwith/profiles/<handle>.md` |
 | `<user>/<repo>` | External repo. Layout auto-detected. |
 | `<user>/<repo>#<handle>` | External collection; picks the specified handle. |
 | Full GitHub URL | Same logic, direct. |
@@ -138,14 +138,14 @@ If nothing matches, fails with a clear message explaining the accepted layouts.
 ### Other commands
 
 ```bash
-npx ia-pair-profiles list                        # list available official profiles
-npx ia-pair-profiles search <term>               # search by name
-npx ia-pair-profiles installed                   # show installed profiles across all tools
-npx ia-pair-profiles installed --for cursor      # filter by tool
-npx ia-pair-profiles remove <handle>             # remove from all detected tools
-npx ia-pair-profiles remove <handle> --for claude # remove from a specific tool
-npx ia-pair-profiles update <handle>             # update an installed profile
-npx ia-pair-profiles print <handle>              # print profile body to stdout
+npx pairwith list                        # list available official profiles
+npx pairwith search <term>               # search by name
+npx pairwith installed                   # show installed profiles across all tools
+npx pairwith installed --for cursor      # filter by tool
+npx pairwith remove <handle>             # remove from all detected tools
+npx pairwith remove <handle> --for claude # remove from a specific tool
+npx pairwith update <handle>             # update an installed profile
+npx pairwith print <handle>              # print profile body to stdout
 ```
 
 ### What `install` does, step by step
@@ -204,16 +204,16 @@ model: opus
 ## Repository structure
 
 ```
-ia-pair-profiles/
+pairwith/
 ├── README.md
 ├── AGENTS.md
 ├── TEMPLATE.md
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── LICENSE
-├── package.json              # npm package (name: ia-pair-profiles)
+├── package.json              # npm package (name: pairwith)
 ├── bin/
-│   └── ia-pair-profile       # CLI entrypoint
+│   └── pairwith       # CLI entrypoint
 ├── skills/
 │   ├── pair-with/
 │   │   └── SKILL.md              # the /pair-with skill
@@ -277,7 +277,7 @@ The best source of personality is the **Dialogue examples** section. Paste real 
 - [x] Skills: `pair-with`, `create-profile` (Claude Code)
 - [x] CLI v1 — `install`, `list`, `search`, `installed`, `remove`, `update`, `print`
 - [x] Multi-tool adapters: Claude Code, Cursor, GitHub Copilot
-- [ ] Publish to npm as `ia-pair-profiles`
+- [ ] Publish to npm as `pairwith`
 - [ ] `--force`, `--dry-run`, `--path <custom-dir>` flags
 - [ ] `generate` — profile generation from commit/PR history
 - [ ] Profile versioning (`merencia@v2` as the developer evolves)
@@ -295,7 +295,7 @@ Read `CONTRIBUTING.md`. Summary:
 - State authorship and consent in the PR description.
 - The community reviews before merge (style, example quality, consent).
 
-If you prefer to host your profile in your own repo, no need to open a PR here — anyone can install it via `npx ia-pair-profiles install <user>/<repo>`.
+If you prefer to host your profile in your own repo, no need to open a PR here — anyone can install it via `npx pairwith install <user>/<repo>`.
 
 ---
 

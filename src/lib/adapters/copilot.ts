@@ -5,7 +5,7 @@ import pc from 'picocolors'
 import type { Adapter, InstallOptions } from './types.js'
 import type { Profile } from '../validator.js'
 
-const MARKER_PREFIX = '<!-- ia-pair-profiles:'
+const MARKER_PREFIX = '<!-- pairwith:'
 const MARKER_SUFFIX = '-->'
 
 function instructionsPath(cwd: string) {

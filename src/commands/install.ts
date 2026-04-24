@@ -72,7 +72,7 @@ async function installSingle(arg: string, opts: InstallCommandOptions): Promise<
 }
 
 async function bootstrap(opts: InstallCommandOptions): Promise<void> {
-  console.log(pc.bold('ia-pair-profiles — setup\n'))
+  console.log(pc.bold('pairwith — setup\n'))
 
   // install Claude skills
   console.log('Installing Claude Code skills...')
@@ -131,7 +131,7 @@ async function bootstrap(opts: InstallCommandOptions): Promise<void> {
   console.log(`\n${pc.bold('Done!')}`)
   console.log(`  /pair-with <handle> <task>  — pair in Claude Code`)
   console.log(`  /create-profile             — generate a profile with AI`)
-  console.log(`  ia-pair-profile list        — browse the official registry`)
+  console.log(`  pairwith list        — browse the official registry`)
 }
 
 async function scaffoldProfile(handle: string): Promise<void> {
@@ -150,7 +150,7 @@ async function scaffoldProfile(handle: string): Promise<void> {
 
   writeFileSync(dest, scaffold, 'utf8')
   console.log(`\n${pc.green('✓')} Draft created at ${pc.bold(dest)}`)
-  console.log(`  Fill in the sections and open a PR at github.com/merencia/ia-pair-profiles`)
+  console.log(`  Fill in the sections and open a PR at github.com/merencia/pairwith`)
 }
 
 function parseUrlSource(url: string): [string, string, string | undefined] {

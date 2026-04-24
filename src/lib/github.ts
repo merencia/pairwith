@@ -1,6 +1,6 @@
 import { UserError } from './errors.js'
 
-const REGISTRY = 'merencia/ia-pair-profiles'
+const REGISTRY = 'merencia/pairwith'
 const RAW = 'https://raw.githubusercontent.com'
 const API = 'https://api.github.com'
 const TIMEOUT_MS = 15_000
@@ -8,7 +8,7 @@ const MAX_SIZE_BYTES = 1_024 * 1_024 // 1 MB
 
 const headers = {
   'Accept': 'application/vnd.github.v3+json',
-  'User-Agent': 'ia-pair-profiles-cli',
+  'User-Agent': 'pairwith-cli',
 }
 
 async function safeFetch(url: string): Promise<Response> {
@@ -34,7 +34,7 @@ async function safeText(res: Response): Promise<string> {
 export async function fetchOfficialProfile(handle: string): Promise<string> {
   const url = `${RAW}/${REGISTRY}/main/profiles/${encodeURIComponent(handle)}.md`
   const res = await safeFetch(url)
-  if (res.status === 404) throw new UserError(`Profile "${handle}" not found in the official registry.\nRun "ia-pair-profile list" to see available profiles.`)
+  if (res.status === 404) throw new UserError(`Profile "${handle}" not found in the official registry.\nRun "pairwith list" to see available profiles.`)
   if (!res.ok) throw new Error(`Failed to fetch profile: HTTP ${res.status}`)
   return safeText(res)
 }

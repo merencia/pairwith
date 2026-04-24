@@ -16,7 +16,7 @@ const TOOL_OPTIONS = 'claude, copilot, cursor, all'
 const program = new Command()
 
 program
-  .name('ia-pair-profile')
+  .name('pairwith')
   .description('Install and manage developer pair programming profiles for AI coding tools')
   .version('0.1.0')
 

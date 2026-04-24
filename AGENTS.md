@@ -4,7 +4,7 @@ Ground rules for any agent (or human) working in this repo. Read this before edi
 
 ## What this repo is
 
-An open-source CLI (`ia-pair-profiles`) plus a registry of dev "profiles" — markdown files that make Claude behave like a specific developer during pair programming.
+An open-source CLI (`pairwith`) plus a registry of dev "profiles" — markdown files that make Claude behave like a specific developer during pair programming.
 
 - The CLI is infrastructure: it must be small, predictable, and safe.
 - Profiles are community content: they must pass quality and consent checks.

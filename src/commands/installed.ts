@@ -20,6 +20,6 @@ export async function installed(opts: { for?: string }): Promise<void> {
 
   if (total === 0) {
     console.log('No profiles installed.')
-    console.log(`Run ${pc.dim('ia-pair-profile install')} to get started.`)
+    console.log(`Run ${pc.dim('pairwith install')} to get started.`)
   }
 }

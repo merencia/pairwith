@@ -1,11 +1,11 @@
 ---
 name: create-profile
-description: Generate a developer profile for ia-pair-profiles from a GitHub handle, links, and optional reference text or file. Follows TEMPLATE.md. Use when someone wants to create their own profile or generate one for a developer they know well.
+description: Generate a developer profile for pairwith from a GitHub handle, links, and optional reference text or file. Follows TEMPLATE.md. Use when someone wants to create their own profile or generate one for a developer they know well.
 ---
 
 # create-profile
 
-Generate a `profiles/<handle>.md` file ready to submit to ia-pair-profiles.
+Generate a `profiles/<handle>.md` file ready to submit to pairwith.
 
 ## Invocation
 

@@ -1,10 +1,10 @@
 {
-  "name": "ia-pair-profiles",
+  "name": "pairwith",
   "version": "0.1.0",
   "description": "Install and manage developer pair programming profiles for Claude Code",
   "type": "module",
   "bin": {
-    "ia-pair-profile": "./dist/cli.js"
+    "pairwith": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -42,6 +42,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/merencia/ia-pair-profiles"
+    "url": "https://github.com/merencia/pairwith"
   }
 }

@@ -24,7 +24,7 @@ Read the profile file at `~/.claude/agents/<handle>.md`.
 
 If the file does not exist:
 - Tell the user the profile is not installed.
-- Suggest: `npx ia-pair-profiles install <handle>`
+- Suggest: `npx pairwith install <handle>`
 - Stop. Do not proceed without a profile.
 
 If the file exists, read it in full before doing anything else.
