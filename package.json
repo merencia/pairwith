@@ -32,6 +32,7 @@
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
   },
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=20"
   },
